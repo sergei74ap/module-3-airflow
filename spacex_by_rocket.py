@@ -23,21 +23,19 @@ rocket_models = (
 )
 
 loads = [
-BashOperator(
-    task_id=f"get_data_{rocket}",
-    bash_command="python3 /root/airflow/dags/spacex/load_launches.py " \
-                 "-y {{ execution_date.year }} -o /var/data " \
-                 "-r {{ params.rocket }}", 
-    params={"rocket": rocket}, 
-    dag=dag) for rocket in rocket_models
+    BashOperator(task_id=f"get_data_{rocket}",
+                 bash_command="python3 /root/airflow/dags/spacex/load_launches.py "
+                              "-y {{ execution_date.year }} -o /var/data "
+                              "-r {{ params.rocket }}",
+                 params={"rocket": rocket},
+                 dag=dag) for rocket in rocket_models
 ]
 
 prints = [
-BashOperator(
-    task_id=f"print_data_{rocket}", 
-    bash_command="cat /var/data/year={{ execution_date.year }}/rocket={{ params.rocket }}/data.csv", 
-    params={"rocket": rocket},
-    dag=dag) for rocket in rocket_models
+    BashOperator(task_id=f"print_data_{rocket}",
+                 bash_command="cat /var/data/year={{ execution_date.year }}/rocket={{ params.rocket }}/data.csv",
+                 params={"rocket": rocket},
+                 dag=dag) for rocket in rocket_models
 ]
 
 loads >> prints
