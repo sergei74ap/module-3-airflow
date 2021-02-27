@@ -38,4 +38,5 @@ prints = [
                  dag=dag) for rocket in rocket_models
 ]
 
-loads >> prints
+for i in range(len(rocket_models)):
+    loads[i] >> prints[i]
